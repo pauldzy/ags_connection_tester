@@ -4,7 +4,7 @@ import uuid
 
 #------------------------------------------------------------------------------
 #
-# Connection Test Script
+# ArcGIS Services Connection Test Script
 # Version 1.0
 #
 #------------------------------------------------------------------------------
@@ -141,10 +141,18 @@ for sdeconn in arcsde_database_connections:
       
       try:
          desc = arcpy.Describe(sde_con);
-         cp = desc.connectionProperties;
       except arcpy.ExecuteError:
          print(arcpy.GetMessages(2));
-       
+      
+      if desc is not None   \
+      and hasattr(desc,"connectionProperties"):
+         cp = desc.connectionProperties;
+      else:
+         arcpy.AddMessage("      ERROR: unable to query SDE connection.");
+         boo_good = False;
+         int_bad =+ 1;
+      
+   if boo_good:   
       arcpy.AddMessage("      User    : " + cp.user);
       arcpy.AddMessage("      Instance: " + cp.instance);
 
